@@ -9,6 +9,7 @@ import {
   TextField, Button, Snackbar, Alert, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 } from "@mui/material";
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
+import backgroundImage from "../assets/login-bg.avif"; // Import the background image
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -16,7 +17,7 @@ const Dashboard = () => {
   const [totalExpense, setTotalExpense] = useState(0);
   const [savingsProgressData, setSavingsProgressData] = useState([]); // For Savings Progress Chart
   const [monthlyData, setMonthlyData] = useState([]); // For Bar Chart
-  const [savingsGoal, setSavingsGoal] = useState(100000); // Savings goal
+  const [savingsGoal, setSavingsGoal] = useState(0); // Savings goal
   const [currentSavings, setCurrentSavings] = useState(0); // Current savings (income - expenses)
   const [goalInput, setGoalInput] = useState(""); // Input for setting savings goal
   const [snackbarOpen, setSnackbarOpen] = useState(false); // Snackbar state
@@ -106,259 +107,366 @@ const Dashboard = () => {
   const expenses = transactions.filter(txn => txn.type === "expense");
 
   return (
-    <Box sx={{ padding: "20px", fontFamily: "Arial, sans-serif", backgroundColor: "#f4f6f8", minHeight: "100vh" }}>
-      <Typography variant="h4" sx={{ marginBottom: "20px", fontWeight: "bold", textAlign: "center", color: "#333", textShadow: "2px 2px 4px rgba(0,0,0,0.1)" }}>
-        Personal Finance Dashboard
-      </Typography>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundImage: `url(${backgroundImage})`, // Background image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 3,
+      }}
+    >
+     <Box
+  sx={{
+    minHeight: "100vh",
+    backgroundImage: `url(${backgroundImage})`, // Set the background image
+    backgroundSize: "cover", // Ensure the image covers the entire area
+    backgroundPosition: "center", // Center the image
+    backgroundRepeat: "no-repeat", // Prevent the image from repeating
+    padding: 3,
+    color: "white", // Set default text color to white
+  }}
+>
+  <Typography
+    variant="h4"
+    sx={{
+      marginBottom: "20px",
+      fontWeight: "bold",
+      textAlign: "center",
+      color: "white", // White text for the title
+      textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Add shadow for better visibility
+    }}
+  >
+    Personal Finance Dashboard
+  </Typography>
 
-      {/* Summary Cards */}
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item xs={12} sm={4}>
-          <Card sx={{ 
-            background: "linear-gradient(135deg, #4CAF50, #81C784)", 
-            color: "white", 
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-            borderRadius: 2,
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": { transform: "scale(1.05)" }
-          }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Income</Typography>
-              <Typography variant="h4" sx={{ marginTop: 1 }}>₹{totalIncome.toFixed(2)}</Typography>
-              <LinearProgress variant="determinate" value={totalIncome / (totalIncome + totalExpense) * 100} sx={{ marginTop: 2, height: 8, borderRadius: 5, backgroundColor: "#388E3C" }} />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Card sx={{ 
-            background: "linear-gradient(135deg, #F44336, #E57373)", 
-            color: "white", 
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-            borderRadius: 2,
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": { transform: "scale(1.05)" }
-          }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>Total Expenses</Typography>
-              <Typography variant="h4" sx={{ marginTop: 1 }}>₹{totalExpense.toFixed(2)}</Typography>
-              <LinearProgress variant="determinate" value={totalExpense / (totalIncome + totalExpense) * 100} sx={{ marginTop: 2, height: 8, borderRadius: 5, backgroundColor: "#D32F2F" }} />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} sm={4}>
-          <Card sx={{ 
-            background: "linear-gradient(135deg, #2196F3, #64B5F6)", 
-            color: "white", 
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-            borderRadius: 2,
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": { transform: "scale(1.05)" }
-          }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold" }}>Balance</Typography>
-              <Typography variant="h4" sx={{ marginTop: 1 }}>₹{(totalIncome - totalExpense).toFixed(2)}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Savings Goal Tracker */}
-      <Box sx={{ marginTop: 4 }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 2, textAlign: "center", color: "#333", textShadow: "2px 2px 4px rgba(0,0,0,0.1)" }}>
-          Savings Goal Tracker
-        </Typography>
-        <Card sx={{ 
-          background: "white", 
-          borderRadius: 2, 
-          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-          padding: "20px",
+  {/* Summary Cards */}
+  <Grid container spacing={3} justifyContent="center">
+    <Grid item xs={12} sm={4}>
+      <Card
+        sx={{
+          background: "linear-gradient(135deg, #4CAF50, #81C784)",
+          color: "white", // White text for card content
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          borderRadius: 2,
           transition: "transform 0.3s ease-in-out",
-          "&:hover": { transform: "scale(1.02)" }
-        }}>
-          <Grid container alignItems="center" spacing={3}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 1 }}>Goal: ₹{savingsGoal.toLocaleString()}</Typography>
-              <Typography variant="body1" sx={{ color: "#666" }}>
-                You have saved ₹{currentSavings.toLocaleString()} so far.
-              </Typography>
-              <LinearProgress
-                variant="determinate"
-                value={(currentSavings / savingsGoal) * 100}
-                sx={{ marginTop: 2, height: 10, borderRadius: 5, backgroundColor: "#e0e0e0" }}
-              />
-              <Typography variant="body2" sx={{ marginTop: 1, textAlign: "right", color: "#666" }}>
-                {((currentSavings / savingsGoal) * 100).toFixed(1)}% completed
-              </Typography>
-            </Grid>
-            <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
-              <CircularProgress
-                variant="determinate"
-                value={(currentSavings / savingsGoal) * 100}
-                size={120}
-                thickness={5}
-                sx={{ color: "#4CAF50" }}
-              />
-            </Grid>
-          </Grid>
-          <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-            <TextField
-              fullWidth
-              label="Set Savings Goal"
-              variant="outlined"
-              type="number"
-              value={goalInput}
-              onChange={(e) => setGoalInput(e.target.value)}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSetSavingsGoal}
-            >
-              Set Goal
-            </Button>
-          </Box>
-        </Card>
-      </Box>
-
-      {/* Income and Expense Tables */}
-      <Grid container spacing={3} sx={{ mt: 4 }}>
-        {/* Income Table */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}>
-            Income Transactions
-          </Typography>
-          <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
-            <Table>
-              <TableHead sx={{ bgcolor: "#4CAF50" }}>
-                <TableRow>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Amount</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Category</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {incomes.map((txn) => (
-                  <TableRow key={txn.id}>
-                    <TableCell>{txn.description}</TableCell>
-                    <TableCell sx={{ color: "#28a745", fontWeight: "bold" }}>₹{txn.amount}</TableCell>
-                    <TableCell>{txn.category}</TableCell>
-                    <TableCell>
-                      {new Date(txn.date).toLocaleString("en-IN", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-
-        {/* Expense Table */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}>
-            Expense Transactions
-          </Typography>
-          <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
-            <Table>
-              <TableHead sx={{ bgcolor: "#F44336" }}>
-                <TableRow>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Amount</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Category</TableCell>
-                  <TableCell sx={{ color: "white", fontWeight: "bold" }}>Date</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {expenses.map((txn) => (
-                  <TableRow key={txn.id}>
-                    <TableCell>{txn.description}</TableCell>
-                    <TableCell sx={{ color: "#dc3545", fontWeight: "bold" }}>₹{txn.amount}</TableCell>
-                    <TableCell>{txn.category}</TableCell>
-                    <TableCell>
-                      {new Date(txn.date).toLocaleString("en-IN", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
-
-      {/* Charts Section */}
-      <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "20px" }}>
-        {/* Bar Chart - Income vs Expenses */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ 
-            borderRadius: 2, 
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": { transform: "scale(1.02)" }
-          }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>Income vs Expenses (Monthly)</Typography>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlyData}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="income" fill="#4CAF50" name="Income" />
-                  <Bar dataKey="expense" fill="#F44336" name="Expense" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        {/* Line Chart - Savings Progress */}
-        <Grid item xs={12} md={6}>
-          <Card sx={{ 
-            borderRadius: 2, 
-            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", 
-            transition: "transform 0.3s ease-in-out",
-            "&:hover": { transform: "scale(1.02)" }
-          }}>
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2 }}>Savings Progress Over Time</Typography>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={savingsProgressData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="savings" stroke="#2196F3" activeDot={{ r: 8 }} />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Snackbar for Notifications */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          "&:hover": { transform: "scale(1.05)" },
+        }}
       >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Total Income
+          </Typography>
+          <Typography variant="h4" sx={{ marginTop: 1 }}>
+            ₹{totalIncome.toFixed(2)}
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(totalIncome / (totalIncome + totalExpense)) * 100}
+            sx={{ marginTop: 2, height: 8, borderRadius: 5, backgroundColor: "#388E3C" }}
+          />
+        </CardContent>
+      </Card>
+    </Grid>
+    <Grid item xs={12} sm={4}>
+      <Card
+        sx={{
+          background: "linear-gradient(135deg, #F44336, #E57373)",
+          color: "white", // White text for card content
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          borderRadius: 2,
+          transition: "transform 0.3s ease-in-out",
+          "&:hover": { transform: "scale(1.05)" },
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Total Expenses
+          </Typography>
+          <Typography variant="h4" sx={{ marginTop: 1 }}>
+            ₹{totalExpense.toFixed(2)}
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(totalExpense / (totalIncome + totalExpense)) * 100}
+            sx={{ marginTop: 2, height: 8, borderRadius: 5, backgroundColor: "#D32F2F" }}
+          />
+        </CardContent>
+      </Card>
+    </Grid>
+    <Grid item xs={12} sm={4}>
+      <Card
+        sx={{
+          background: "linear-gradient(135deg, #2196F3, #64B5F6)",
+          color: "white", // White text for card content
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          borderRadius: 2,
+          transition: "transform 0.3s ease-in-out",
+          "&:hover": { transform: "scale(1.05)" },
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Balance
+          </Typography>
+          <Typography variant="h4" sx={{ marginTop: 1 }}>
+            ₹{(totalIncome - totalExpense).toFixed(2)}
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  </Grid>
+
+  {/* Savings Goal Tracker */}
+  <Box sx={{ marginTop: 4 }}>
+    <Typography
+      variant="h5"
+      sx={{
+        fontWeight: "bold",
+        marginBottom: 2,
+        textAlign: "center",
+        color: "white", // White text for the heading
+        textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Add shadow for better visibility
+      }}
+    >
+      Savings Goal Tracker
+    </Typography>
+    <Card
+      sx={{
+        background: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+        borderRadius: 2,
+        boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+        padding: "20px",
+        transition: "transform 0.3s ease-in-out",
+        "&:hover": { transform: "scale(1.02)" },
+      }}
+    >
+      <Grid container alignItems="center" spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 1, color: "#333" }}>
+            Goal: ₹{savingsGoal.toLocaleString()}
+          </Typography>
+          <Typography variant="body1" sx={{ color: "#666" }}>
+            You have saved ₹{currentSavings.toLocaleString()} so far.
+          </Typography>
+          <LinearProgress
+            variant="determinate"
+            value={(currentSavings / savingsGoal) * 100}
+            sx={{ marginTop: 2, height: 10, borderRadius: 5, backgroundColor: "#e0e0e0" }}
+          />
+          <Typography variant="body2" sx={{ marginTop: 1, textAlign: "right", color: "#666" }}>
+            {((currentSavings / savingsGoal) * 100).toFixed(1)}% completed
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6} sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress
+            variant="determinate"
+            value={(currentSavings / savingsGoal) * 100}
+            size={120}
+            thickness={5}
+            sx={{ color: "#4CAF50" }}
+          />
+        </Grid>
+      </Grid>
+      <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+        <TextField
+          fullWidth
+          label="Set Savings Goal"
+          variant="outlined"
+          type="number"
+          value={goalInput}
+          onChange={(e) => setGoalInput(e.target.value)}
+          sx={{ backgroundColor: "rgba(255, 255, 255, 0.8)" }} // Semi-transparent white background
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSetSavingsGoal}
+        >
+          Set Goal
+        </Button>
+      </Box>
+    </Card>
+  </Box>
+
+  {/* Income and Expense Tables */}
+  <Grid container spacing={3} sx={{ mt: 4 }}>
+    {/* Income Table */}
+    <Grid item xs={12} md={6}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: "bold",
+          mb: 2,
+          textAlign: "center",
+          color: "white", // White text for the heading
+          textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Add shadow for better visibility
+        }}
+      >
+        Income Transactions
+      </Typography>
+      <TableContainer
+        component={Paper}
+        sx={{ borderRadius: 2, boxShadow: 3, backgroundColor: "rgba(255, 255, 255, 0.8)" }} // Semi-transparent white background
+      >
+        <Table>
+          <TableHead sx={{ bgcolor: "#4CAF50" }}>
+            <TableRow>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Amount</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Category</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {incomes.map((txn) => (
+              <TableRow key={txn.id}>
+                <TableCell>{txn.description}</TableCell>
+                <TableCell sx={{ color: "#28a745", fontWeight: "bold" }}>₹{txn.amount}</TableCell>
+                <TableCell>{txn.category}</TableCell>
+                <TableCell>
+                  {new Date(txn.date).toLocaleString("en-IN", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
+
+    {/* Expense Table */}
+    <Grid item xs={12} md={6}>
+      <Typography
+        variant="h5"
+        sx={{
+          fontWeight: "bold",
+          mb: 2,
+          textAlign: "center",
+          color: "white", // White text for the heading
+          textShadow: "2px 2px 4px rgba(0,0,0,0.5)", // Add shadow for better visibility
+        }}
+      >
+        Expense Transactions
+      </Typography>
+      <TableContainer
+        component={Paper}
+        sx={{ borderRadius: 2, boxShadow: 3, backgroundColor: "rgba(255, 255, 255, 0.8)" }} // Semi-transparent white background
+      >
+        <Table>
+          <TableHead sx={{ bgcolor: "#F44336" }}>
+            <TableRow>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Description</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Amount</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Category</TableCell>
+              <TableCell sx={{ color: "white", fontWeight: "bold" }}>Date</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {expenses.map((txn) => (
+              <TableRow key={txn.id}>
+                <TableCell>{txn.description}</TableCell>
+                <TableCell sx={{ color: "#dc3545", fontWeight: "bold" }}>₹{txn.amount}</TableCell>
+                <TableCell>{txn.category}</TableCell>
+                <TableCell>
+                  {new Date(txn.date).toLocaleString("en-IN", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Grid>
+  </Grid>
+
+  {/* Charts Section */}
+  <Grid container spacing={3} justifyContent="center" sx={{ marginTop: "20px" }}>
+    {/* Bar Chart - Income vs Expenses */}
+    <Grid item xs={12} md={6}>
+      <Card
+        sx={{
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          transition: "transform 0.3s ease-in-out",
+          "&:hover": { transform: "scale(1.02)" },
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2, color: "#333" }}>
+            Income vs Expenses (Monthly)
+          </Typography>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={monthlyData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="income" fill="#4CAF50" name="Income" />
+              <Bar dataKey="expense" fill="#F44336" name="Expense" />
+            </BarChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Line Chart - Savings Progress */}
+    <Grid item xs={12} md={6}>
+      <Card
+        sx={{
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+          transition: "transform 0.3s ease-in-out",
+          "&:hover": { transform: "scale(1.02)" },
+          backgroundColor: "rgba(255, 255, 255, 0.8)", // Semi-transparent white background
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: "bold", marginBottom: 2, color: "#333" }}>
+            Savings Progress Over Time
+          </Typography>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={savingsProgressData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="savings" stroke="#2196F3" activeDot={{ r: 8 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+    </Grid>
+  </Grid>
+
+  {/* Snackbar for Notifications */}
+  <Snackbar
+    open={snackbarOpen}
+    autoHideDuration={3000}
+    onClose={() => setSnackbarOpen(false)}
+    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+  >
+    <Alert onClose={() => setSnackbarOpen(false)} severity="success" sx={{ width: "100%" }}>
+      {snackbarMessage}
+    </Alert>
+  </Snackbar>
+</Box>
     </Box>
   );
 };
